@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Diálogos Pawn - easyDialog</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: #f0f0f0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.8) 0%, rgba(40, 0, 0, 0.8) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(255, 0, 0, 0.1),
+                        0 0 100px rgba(255, 0, 0, 0.05) inset;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        }
+        
+        h1 {
+            color: #fff;
+            margin-bottom: 16px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5),
+                         0 0 60px rgba(255, 0, 0, 0.2);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        }
+        
+        .subtitle {
+            color: #ff8888;
+            font-size: 1.3rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .config-panel {
+            flex: 1;
+            min-width: 320px;
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.9) 0%, rgba(30, 0, 0, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.1),
+                        0 0 60px rgba(255, 0, 0, 0.05) inset;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .config-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 0, 0, 0.15),
+                        0 0 60px rgba(255, 0, 0, 0.08) inset;
+        }
+        
+        .result-panel {
+            flex: 1;
+            min-width: 320px;
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.9) 0%, rgba(30, 0, 0, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.1),
+                        0 0 60px rgba(255, 0, 0, 0.05) inset;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .result-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 0, 0, 0.15),
+                        0 0 60px rgba(255, 0, 0, 0.08) inset;
+        }
+        
+        .panel-title {
+            color: #fff;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 0, 0, 0.3);
+            font-size: 1.8rem;
+            font-weight: 700;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .panel-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background: linear-gradient(180deg, #ff0000, #ff4444);
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 28px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: #ff8888;
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1),
+                        0 0 30px rgba(255, 0, 0, 0.2) inset;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        input:hover, select:hover, textarea:hover {
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+        
+        .btn {
+            padding: 18px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: white;
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(255, 0, 0, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ff2222 0%, #dd0000 100%);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff8888;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            box-shadow: 0 4px 16px rgba(255, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: rgba(255, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.2);
+        }
+        
+        .dynamic-inputs {
+            margin-top: 20px;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        
+        .dynamic-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .dynamic-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .btn-remove {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff8888;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 48px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .btn-remove:hover {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: rgba(255, 0, 0, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .btn-small {
+            padding: 14px 24px;
+            font-size: 0.95rem;
+        }
+        
+        .code-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 20px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            min-height: 300px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.1) inset;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #00ff88;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 160px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.95) 0%, rgba(40, 0, 0, 0.95) 100%);
+            color: #00ff88;
+            padding: 24px 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.15),
+                        0 0 60px rgba(0, 255, 136, 0.1) inset;
+            backdrop-filter: blur(20px);
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #ff8888;
+            font-size: 0.95rem;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 0, 0, 0.2);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        .example {
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.8) 0%, rgba(40, 0, 0, 0.8) 100%);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .example h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .example h3::before {
+            content: '💡';
+            font-size: 1.8rem;
+        }
+        
+        .example code {
+            color: #00ff88;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            display: block;
+            margin: 16px 0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1) inset;
+        }
+        
+        .list-item-input {
+            flex: 1;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .tablist-row-input {
+            flex: 1;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .items-container {
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .config-panel, .result-panel {
+                padding: 30px;
+            }
+            
+            .action-buttons .btn {
+                min-width: 100%;
+            }
+            
+            .dynamic-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            
+            .btn-remove {
+                width: 100%;
+                height: 48px;
+            }
+        }
+        
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .config-panel, .result-panel, .example {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff0000, #cc0000);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ff2222, #dd0000);
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 0, 0, 0.5),
+                             0 0 40px rgba(255, 0, 0, 0.3);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 0, 0, 0.8),
+                             0 0 60px rgba(255, 0, 0, 0.5);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glow"><i class="fas fa-code icon"></i> Generador de Diálogos Pawn</h1>
+            <p class="subtitle">Crea diálogos para SA-MP usando la librería easyDialog</p>
+        </header>
+        
+        <div class="example">
+            <h3>Ejemplo de uso</h3>
+            <code>Dialog_Show(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT, "Login", "Ingresa tu contraseña:", "Aceptar", "Cancelar");</code>
+        </div>
+        
+        <div class="main-content">
+            <div class="config-panel">
+                <h2 class="panel-title"><i class="fas fa-cogs icon"></i> Configuración</h2>
+                
+                <div class="form-group">
+                    <label for="dialogName"><i class="fas fa-tag icon"></i> Nombre del Diálogo</label>
+                    <input type="text" id="dialogName" placeholder="DIALOG_LOGIN" value="DIALOG_LOGIN">
+                </div>
+                
+                <div class="form-group">
+                    <label for="dialogType"><i class="fas fa-list-alt icon"></i> Tipo de Diálogo</label>
+                    <select id="dialogType">
+                        <option value="DIALOG_STYLE_MSGBOX">MSGBOX</option>
+                        <option value="DIALOG_STYLE_INPUT" selected>INPUT</option>
+                        <option value="DIALOG_STYLE_LIST">LIST</option>
+                        <option value="DIALOG_STYLE_PASSWORD">PASSWORD</option>
+                        <option value="DIALOG_STYLE_TABLIST">TABLIST</option>
+                        <option value="DIALOG_STYLE_TABLIST_HEADERS">TABLIST_HEADERS</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dialogTitle"><i class="fas fa-heading icon"></i> Título del Diálogo</label>
+                    <input type="text" id="dialogTitle" placeholder="Login" value="Login">
+                </div>
+                
+                <div id="dynamicFields">
+                    <!-- Los campos dinámicos se generarán aquí según el tipo de diálogo -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="button1"><i class="fas fa-check-circle icon"></i> Texto Botón 1</label>
+                    <input type="text" id="button1" placeholder="Aceptar" value="Aceptar">
+                </div>
+                
+                <div class="form-group">
+                    <label for="button2"><i class="fas fa-times-circle icon"></i> Texto Botón 2</label>
+                    <input type="text" id="button2" placeholder="Cancelar" value="Cancelar">
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="resetBtn" class="btn btn-secondary"><i class="fas fa-redo icon"></i> Reiniciar</button>
+                    <button id="generateBtn" class="btn btn-primary"><i class="fas fa-bolt icon"></i> Generar Código</button>
+                </div>
+            </div>
+            
+            <div class="result-panel">
+                <h2 class="panel-title"><i class="fas fa-terminal icon"></i> Código Generado</h2>
+                
+                <div class="code-container">
+                    <pre id="generatedCode"></pre>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="copyBtn" class="btn btn-secondary" disabled><i class="far fa-copy icon"></i> Copiar Código</button>
+                    <button id="clearBtn" class="btn btn-secondary"><i class="fas fa-broom icon"></i> Limpiar</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Generador de Diálogos para SA-MP usando easyDialog</p>
+        </footer>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle icon" style="color: #00ff88; margin-right: 10px;"></i>
+        <span>Código copiado al portapapeles</span>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const dialogType = document.getElementById('dialogType');
+        const dialogName = document.getElementById('dialogName');
+        const dialogTitle = document.getElementById('dialogTitle');
+        const dynamicFields = document.getElementById('dynamicFields');
+        const button1 = document.getElementById('button1');
+        const button2 = document.getElementById('button2');
+        const generatedCode = document.getElementById('generatedCode');
+        const generateBtn = document.getElementById('generateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const notification = document.getElementById('notification');
+        
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar eventos
+            dialogType.addEventListener('change', updateDynamicFields);
+            generateBtn.addEventListener('click', generateCode);
+            resetBtn.addEventListener('click', resetForm);
+            copyBtn.addEventListener('click', copyCode);
+            clearBtn.addEventListener('click', clearCode);
+            
+            // Inicializar campos dinámicos
+            updateDynamicFields();
+        });
+        
+        // Actualizar campos dinámicos según el tipo de diálogo
+        function updateDynamicFields() {
+            const type = dialogType.value;
+            dynamicFields.innerHTML = '';
+            
+            switch(type) {
+                case 'DIALOG_STYLE_MSGBOX':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label><i class="fas fa-comment icon"></i> Mensaje</label>
+                            <textarea id="dialogContent" placeholder="Bienvenido al servidor\nSelecciona una opción">Bienvenido al servidor\nSelecciona una opción</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'DIALOG_STYLE_INPUT':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label><i class="fas fa-edit icon"></i> Texto descriptivo</label>
+                            <textarea id="dialogContent" placeholder="Ingresa tu nombre de usuario:">Ingresa tu nombre de usuario:</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'DIALOG_STYLE_LIST':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label><i class="fas fa-list icon"></i> Items de la Lista</label>
+                            <div class="items-container" id="listItemsContainer">
+                                <!-- Los items se agregarán aquí dinámicamente -->
+                            </div>
+                            <button type="button" id="addListItem" class="btn btn-secondary btn-small" style="margin-top: 10px;">
+                                <i class="fas fa-plus icon"></i> Agregar Item
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Configurar evento para agregar item
+                    setTimeout(() => {
+                        const listContainer = document.getElementById('listItemsContainer');
+                        if (listContainer) {
+                            // Agregar primeros 3 items por defecto
+                            for (let i = 0; i < 3; i++) {
+                                addListItemInput();
+                            }
+                            document.getElementById('addListItem').addEventListener('click', addListItemInput);
+                        }
+                    }, 10);
+                    break;
+                    
+                case 'DIALOG_STYLE_PASSWORD':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label><i class="fas fa-lock icon"></i> Texto descriptivo</label>
+                            <textarea id="dialogContent" placeholder="Ingresa tu contraseña:">Ingresa tu contraseña:</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'DIALOG_STYLE_TABLIST':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label><i class="fas fa-table icon"></i> Filas de la Tabla (usa \\t para separar columnas)</label>
+                            <div class="items-container" id="tablistRowsContainer">
+                                <!-- Las filas se agregarán aquí dinámicamente -->
+                            </div>
+                            <button type="button" id="addTablistRow" class="btn btn-secondary btn-small" style="margin-top: 10px;">
+                                <i class="fas fa-plus icon"></i> Agregar Fila
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Configurar evento para agregar fila
+                    setTimeout(() => {
+                        const tablistContainer = document.getElementById('tablistRowsContainer');
+                        if (tablistContainer) {
+                            // Agregar primeras 2 filas por defecto
+                            for (let i = 0; i < 2; i++) {
+                                addTablistRowInput();
+                            }
+                            document.getElementById('addTablistRow').addEventListener('click', addTablistRowInput);
+                        }
+                    }, 10);
+                    break;
+                    
+                case 'DIALOG_STYLE_TABLIST_HEADERS':
+                    dynamicFields.innerHTML = `
+                        <div class="form-group">
+                            <label for="tabHeadersInput"><i class="fas fa-columns icon"></i> Encabezados de columnas (separados por \\t)</label>
+                            <input type="text" id="tabHeadersInput" placeholder="Nombre\\tNivel\\tRango" value="Nombre\\tNivel">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-table icon"></i> Filas de la Tabla (usa \\t para separar columnas)</label>
+                            <div class="items-container" id="tablistHeadersRowsContainer">
+                                <!-- Las filas se agregarán aquí dinámicamente -->
+                            </div>
+                            <button type="button" id="addTablistHeadersRow" class="btn btn-secondary btn-small" style="margin-top: 10px;">
+                                <i class="fas fa-plus icon"></i> Agregar Fila
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Configurar evento para agregar fila
+                    setTimeout(() => {
+                        const tablistHeadersContainer = document.getElementById('tablistHeadersRowsContainer');
+                        if (tablistHeadersContainer) {
+                            // Agregar primeras 2 filas por defecto
+                            for (let i = 0; i < 2; i++) {
+                                addTablistHeadersRowInput();
+                            }
+                            document.getElementById('addTablistHeadersRow').addEventListener('click', addTablistHeadersRowInput);
+                        }
+                    }, 10);
+                    break;
+            }
+        }
+        
+        // Función para agregar un item de lista
+        function addListItemInput() {
+            const container = document.getElementById('listItemsContainer');
+            const itemId = Date.now() + Math.random();
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'dynamic-item';
+            itemDiv.id = `list-item-${itemId}`;
+            itemDiv.innerHTML = `
+                <button type="button" class="btn-remove" data-id="${itemId}" title="Eliminar">
+                    <i class="fas fa-trash-alt icon"></i>
+                </button>
+                <input type="text" class="list-item-input" placeholder="Opción ${container.children.length + 1}" value="Opción ${container.children.length + 1}">
+            `;
+            
+            container.appendChild(itemDiv);
+            
+            // Configurar evento para eliminar
+            itemDiv.querySelector('.btn-remove').addEventListener('click', function() {
+                container.removeChild(itemDiv);
+            });
+        }
+        
+        // Función para agregar una fila de tabla
+        function addTablistRowInput() {
+            const container = document.getElementById('tablistRowsContainer');
+            const rowId = Date.now() + Math.random();
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'dynamic-item';
+            rowDiv.id = `tablist-row-${rowId}`;
+            rowDiv.innerHTML = `
+                <button type="button" class="btn-remove" data-id="${rowId}" title="Eliminar">
+                    <i class="fas fa-trash-alt icon"></i>
+                </button>
+                <input type="text" class="tablist-row-input" placeholder="Jugador${container.children.length + 1}\\t100" value="Jugador${container.children.length + 1}\\t100">
+            `;
+            
+            container.appendChild(rowDiv);
+            
+            // Configurar evento para eliminar
+            rowDiv.querySelector('.btn-remove').addEventListener('click', function() {
+                container.removeChild(rowDiv);
+            });
+        }
+        
+        // Función para agregar una fila de tabla con headers
+        function addTablistHeadersRowInput() {
+            const container = document.getElementById('tablistHeadersRowsContainer');
+            const rowId = Date.now() + Math.random();
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'dynamic-item';
+            rowDiv.id = `tablist-headers-row-${rowId}`;
+            rowDiv.innerHTML = `
+                <button type="button" class="btn-remove" data-id="${rowId}" title="Eliminar">
+                    <i class="fas fa-trash-alt icon"></i>
+                </button>
+                <input type="text" class="tablist-row-input" placeholder="Jugador${container.children.length + 1}\\t100" value="Jugador${container.children.length + 1}\\t100">
+            `;
+            
+            container.appendChild(rowDiv);
+            
+            // Configurar evento para eliminar
+            rowDiv.querySelector('.btn-remove').addEventListener('click', function() {
+                container.removeChild(rowDiv);
+            });
+        }
+        
+        // Obtener todos los items de lista
+        function getAllListItems() {
+            const container = document.getElementById('listItemsContainer');
+            if (!container) return [];
+            
+            const items = [];
+            const inputs = container.querySelectorAll('.list-item-input');
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    items.push(input.value.trim());
+                }
+            });
+            return items;
+        }
+        
+        // Obtener todas las filas de tabla
+        function getAllTablistRows() {
+            const container = document.getElementById('tablistRowsContainer');
+            if (!container) return [];
+            
+            const rows = [];
+            const inputs = container.querySelectorAll('.tablist-row-input');
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    rows.push(input.value.trim());
+                }
+            });
+            return rows;
+        }
+        
+        // Obtener todas las filas de tabla con headers
+        function getAllTablistHeadersRows() {
+            const container = document.getElementById('tablistHeadersRowsContainer');
+            if (!container) return [];
+            
+            const rows = [];
+            const inputs = container.querySelectorAll('.tablist-row-input');
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    rows.push(input.value.trim());
+                }
+            });
+            return rows;
+        }
+        
+        // Generar código Pawn
+        function generateCode() {
+            const name = dialogName.value.trim() || "DIALOG_LOGIN";
+            const type = dialogType.value;
+            const title = dialogTitle.value.trim() || "Login";
+            const btn1 = button1.value.trim() || "Aceptar";
+            const btn2 = button2.value.trim() || "Cancelar";
+            
+            let content = "";
+            
+            // Procesar contenido según el tipo de diálogo
+            switch(type) {
+                case 'DIALOG_STYLE_MSGBOX':
+                    const msgContent = document.getElementById('dialogContent') ? document.getElementById('dialogContent').value.trim() : "Bienvenido al servidor\nSelecciona una opción";
+                    content = msgContent.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+                    break;
+                    
+                case 'DIALOG_STYLE_INPUT':
+                    const inputText = document.getElementById('dialogContent') ? document.getElementById('dialogContent').value.trim() : "Ingresa tu nombre de usuario:";
+                    content = inputText.replace(/"/g, '\\"');
+                    break;
+                    
+                case 'DIALOG_STYLE_LIST':
+                    const listItems = getAllListItems();
+                    if (listItems.length > 0) {
+                        content = listItems.join('\\n').replace(/"/g, '\\"');
+                    } else {
+                        content = "Opción 1\\nOpción 2\\nOpción 3";
+                    }
+                    break;
+                    
+                case 'DIALOG_STYLE_PASSWORD':
+                    const passText = document.getElementById('dialogContent') ? document.getElementById('dialogContent').value.trim() : "Ingresa tu contraseña:";
+                    content = passText.replace(/"/g, '\\"');
+                    break;
+                    
+                case 'DIALOG_STYLE_TABLIST':
+                    const tabRows = getAllTablistRows();
+                    if (tabRows.length > 0) {
+                        content = tabRows.join('\\n').replace(/"/g, '\\"').replace(/\n/g, '\\n');
+                    } else {
+                        content = "Jugador1\\t100\\nJugador2\\t50";
+                    }
+                    break;
+                    
+                case 'DIALOG_STYLE_TABLIST_HEADERS':
+                    const headersInput = document.getElementById('tabHeadersInput') ? document.getElementById('tabHeadersInput').value.trim() : "Nombre\\tNivel";
+                    const tabHeadersRows = getAllTablistHeadersRows();
+                    
+                    let tabData = "";
+                    if (tabHeadersRows.length > 0) {
+                        tabData = tabHeadersRows.join('\\n').replace(/"/g, '\\"').replace(/\n/g, '\\n');
+                    } else {
+                        tabData = "Jugador1\\t100\\nJugador2\\t50";
+                    }
+                    
+                    content = `${headersInput.replace(/"/g, '\\"')}\\n${tabData}`;
+                    break;
+            }
+            
+            // Generar el código Pawn
+            const code = `Dialog_Show(playerid, ${name}, ${type}, "${title.replace(/"/g, '\\"')}", "${content}", "${btn1.replace(/"/g, '\\"')}", "${btn2.replace(/"/g, '\\"')}");`;
+            
+            // Mostrar el código generado
+            generatedCode.textContent = code;
+            
+            // Habilitar botón de copiar
+            copyBtn.disabled = false;
+        }
+        
+        // Copiar código al portapapeles
+        function copyCode() {
+            const codeText = generatedCode.textContent;
+            
+            navigator.clipboard.writeText(codeText).then(() => {
+                showNotification('Código copiado al portapapeles');
+            }).catch(err => {
+                // Fallback para navegadores antiguos
+                const textArea = document.createElement('textarea');
+                textArea.value = codeText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Código copiado al portapapeles');
+            });
+        }
+        
+        // Mostrar notificación
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Reiniciar formulario
+        function resetForm() {
+            dialogName.value = 'DIALOG_LOGIN';
+            dialogType.value = 'DIALOG_STYLE_INPUT';
+            dialogTitle.value = 'Login';
+            button1.value = 'Aceptar';
+            button2.value = 'Cancelar';
+            
+            updateDynamicFields();
+        }
+        
+        // Limpiar código
+        function clearCode() {
+            generatedCode.textContent = '';
+            copyBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>
