@@ -1,0 +1,1048 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #f0f0f0;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(20, 20, 20, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(220, 20, 60, 0.2);
+    overflow: hidden;
+    border: 1px solid #333;
+    backdrop-filter: blur(10px);
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: white;
+    padding: 25px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+header h1 {
+    font-size: 2.3rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 300;
+    position: relative;
+}
+
+/* Cache Status */
+.cache-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cache-status span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cache-online {
+    color: #00ff88;
+}
+
+.cache-offline {
+    color: #ff3333;
+}
+
+/* Main content */
+main {
+    padding: 35px;
+}
+
+.form-container {
+    background: linear-gradient(145deg, #1a1a1a, #222222);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #333;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+
+h2 {
+    color: #dc143c;
+    margin-bottom: 8px;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.form-description {
+    color: #aaa;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+/* Form groups */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #f0f0f0;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.required {
+    color: #dc143c;
+}
+
+/* Inputs y textareas */
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    background: #1a1a1a;
+    color: #f0f0f0;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder,
+select::placeholder {
+    color: #666;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #dc143c;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.3);
+    background: #222;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Checkbox group */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+input[type="checkbox"] {
+    accent-color: #dc143c;
+    width: 18px;
+    height: 18px;
+}
+
+.tooltip {
+    position: relative;
+    cursor: help;
+    color: #dc143c;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 180px;
+    background-color: #222;
+    color: #f0f0f0;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    border: 1px solid #444;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Options group (radio buttons) - MODIFICADO */
+.options-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.option {
+    flex: 1;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.option input[type="radio"] {
+    display: none;
+}
+
+.option-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: #1a1a1a;
+    height: 100%;
+    position: relative;
+}
+
+.option-content i {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #dc143c;
+}
+
+.option-content span {
+    font-weight: 600;
+    color: #f0f0f0;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Quitado el precio de la esquina */
+.option-price {
+    display: none;
+}
+
+.option input[type="radio"]:checked + .option-content {
+    border-color: #dc143c;
+    background: linear-gradient(145deg, rgba(220, 20, 60, 0.1), rgba(139, 0, 0, 0.1));
+    box-shadow: 0 5px 15px rgba(220, 20, 60, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Select con precio */
+.select-with-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-price {
+    font-size: 0.85rem;
+    color: #00ff88;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Cart button - Botón más pequeño */
+.cart-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #dc143c, #8b0000);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cart-btn:hover {
+    background: linear-gradient(135deg, #ff0033, #b30000);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 20, 60, 0.4);
+}
+
+/* Order template */
+.order-template {
+    background: linear-gradient(145deg, #1a1a1a, #222222);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #333;
+    margin-top: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+
+.order-details {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444;
+}
+
+.order-header h3 {
+    font-size: 1.3rem;
+    color: #f0f0f0;
+    font-weight: 600;
+}
+
+.order-price-total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.order-info {
+    margin-bottom: 25px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.order-item-main {
+    flex: 1;
+}
+
+.item-label {
+    font-weight: 600;
+    color: #dc143c;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.item-value {
+    color: #ccc;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.item-price {
+    font-weight: 700;
+    color: #00ff88;
+    font-size: 1rem;
+    text-align: right;
+    min-width: 70px;
+}
+
+.item-description {
+    color: #aaa;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-top: 2px;
+    white-space: pre-line;
+}
+
+/* Order actions - Botones más pequeños */
+.order-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 140px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.small-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-width: auto;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #4169e1, #2948b1);
+    color: white;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #5a7de8, #4169e1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    color: white;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #ff6666, #ff3333);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.3);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1a1a1a, #222222);
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+}
+
+.success-icon {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.offline-icon {
+    color: #ffaa00;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.modal-actions {
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    border-top: 1px solid #333;
+    background: rgba(20, 20, 20, 0.9);
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+/* Error message */
+.error-message {
+    color: #ff6666;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    min-height: 18px;
+}
+
+/* Estado de error para título */
+.error {
+    border-color: #ff3333 !important;
+    background-color: rgba(255, 51, 51, 0.05) !important;
+}
+
+/* Clase para ocultar elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Precio pequeño */
+.small-price {
+    font-size: 0.8rem;
+    color: #00ff88;
+    margin-left: 5px;
+}
+
+/* ========== ESTILOS DEL PANEL ADMIN ========== */
+
+/* Botón de alternar panel admin */
+.admin-toggle-btn {
+    background: linear-gradient(135deg, #4169e1, #2948b1);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.admin-toggle-btn:hover {
+    background: linear-gradient(135deg, #5a7de8, #4169e1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+}
+
+/* Botón modo offline */
+.offline-toggle-btn {
+    background: linear-gradient(135deg, #ffaa00, #cc8800);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.offline-toggle-btn:hover {
+    background: linear-gradient(135deg, #ffbb33, #ffaa00);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 170, 0, 0.3);
+}
+
+.offline-mode {
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+}
+
+/* Inputs del admin */
+.admin-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    background: #1a1a1a;
+    color: #f0f0f0;
+}
+
+.admin-input:focus {
+    border-color: #4169e1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.3);
+    background: #222;
+}
+
+/* Header del panel admin */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-header h3 {
+    color: #f0f0f0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cache-controls {
+    display: flex;
+    gap: 8px;
+}
+
+/* Lista de pedidos admin */
+.admin-orders-list {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.admin-order-item {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid #444;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.admin-order-item:hover {
+    border-color: #4169e1;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(65, 105, 225, 0.2);
+    background: rgba(40, 40, 40, 0.9);
+}
+
+.admin-order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.admin-order-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #f0f0f0;
+    font-size: 1rem;
+}
+
+.admin-order-title i {
+    color: #4169e1;
+}
+
+.admin-order-price {
+    font-weight: 700;
+    color: #00ff88;
+    font-size: 1.1rem;
+}
+
+.admin-order-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.admin-order-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.admin-order-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #00ff88;
+}
+
+.status-active i {
+    color: #00ff88;
+    font-size: 0.6rem;
+}
+
+.status-cancelled {
+    color: #ff3333;
+}
+
+.status-cancelled i {
+    color: #ff3333;
+    font-size: 0.6rem;
+}
+
+/* Cache Info */
+.cache-info {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid #444;
+}
+
+.cache-info h4 {
+    color: #4169e1;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+}
+
+.cache-info-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 0.85rem;
+}
+
+.cache-info-details p {
+    margin: 5px 0;
+    color: #ccc;
+}
+
+.cache-info-details span {
+    color: #00ff88;
+    font-weight: 600;
+}
+
+.cache-info-content {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.cache-info-content p {
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.cache-info-content span {
+    color: #00ff88;
+    font-weight: 600;
+}
+
+/* Offline stats */
+.offline-stats {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: left;
+}
+
+.offline-stats p {
+    margin: 8px 0;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.offline-stats span {
+    color: #00ff88;
+    font-weight: 600;
+}
+
+/* Mensaje cuando no hay pedidos */
+.no-orders-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-orders-message i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.no-orders-message p {
+    font-size: 1rem;
+}
+
+/* Modal de detalles del pedido admin */
+.admin-order-details {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #444;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.admin-order-detail-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.admin-order-detail-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admin-order-detail-item strong {
+    color: #4169e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.admin-order-detail-item span {
+    color: #f0f0f0;
+    font-weight: 500;
+    display: block;
+    margin-left: 25px;
+}
+
+.admin-order-description {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-left: 25px;
+    white-space: pre-line;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #4169e1;
+}
+
+.admin-order-detail-item.total-price {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #444;
+}
+
+.admin-total-price {
+    color: #00ff88 !important;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+/* Barra de desplazamiento */
+.admin-orders-list::-webkit-scrollbar,
+.admin-order-details::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-orders-list::-webkit-scrollbar-track,
+.admin-order-details::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.admin-orders-list::-webkit-scrollbar-thumb,
+.admin-order-details::-webkit-scrollbar-thumb {
+    background: #4169e1;
+    border-radius: 4px;
+}
+
+.admin-orders-list::-webkit-scrollbar-thumb:hover,
+.admin-order-details::-webkit-scrollbar-thumb:hover {
+    background: #5a7de8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        border-radius: 15px;
+    }
+    
+    main, header {
+        padding: 20px;
+    }
+    
+    .form-container, .order-template {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .options-group {
+        flex-direction: column;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .order-item {
+        flex-direction: column;
+    }
+    
+    .item-price {
+        text-align: left;
+        margin-top: 5px;
+    }
+    
+    /* Responsive para panel admin */
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .admin-order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .admin-order-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .admin-order-detail-item span,
+    .admin-order-description {
+        margin-left: 0;
+    }
+    
+    .cache-info-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-buttons {
+        flex-direction: column;
+    }
+    
+    .admin-toggle-btn,
+    .offline-toggle-btn {
+        width: 100%;
+    }
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-container, .order-template {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Estilo para la etiqueta de precio del sistema */
+.system-price-label {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Clase para ordenar elementos en fila */
+.inline-options {
+    display: flex;
+    gap: 10px;
+}
+
+/* Clase para el contenido principal del resumen */
+.order-main-title {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
