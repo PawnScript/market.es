@@ -1,0 +1,546 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #111;
+    color: #eee;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    transform: rotate(0deg);
+    transform-origin: center center;
+}
+
+/* Vista de lado (landscape) */
+@media (orientation: portrait) {
+    body {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -50vw;
+        margin-left: -50vh;
+    }
+    
+    .main-container,
+    .start-screen {
+        width: 100vh;
+        height: 100vw;
+    }
+}
+
+/* Pantalla de inicio */
+.start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #111 url('https://i.wpfc.ml/34/8cz1em.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.8s;
+}
+
+.start-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.start-button {
+    background: linear-gradient(to bottom, #c00, #900);
+    color: white;
+    border: 2px solid #600;
+    border-radius: 8px;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.start-button:hover {
+    background: linear-gradient(to bottom, #d00, #a00);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.7);
+}
+
+/* Contenedor principal */
+.main-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: none;
+}
+
+/* Representación del juego */
+.game-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://i.wpfc.ml/34/8cz1em.jpg') no-repeat center center;
+    background-size: cover;
+    filter: brightness(0.8);
+}
+
+/* Botón flotante */
+.floating-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(to bottom, #c00, #900);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    transition: transform 0.3s;
+    user-select: none;
+}
+
+.floating-button:hover {
+    transform: scale(1.1);
+}
+
+.floating-button i {
+    font-size: 1.8rem;
+    color: white;
+    pointer-events: none;
+}
+
+/* Menú desplegable */
+.menu-container {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    width: 350px;
+    max-width: 90vw;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #c00;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    z-index: 99;
+    display: none;
+    overflow: hidden;
+}
+
+.menu-header {
+    background: linear-gradient(to right, #c00, #900);
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.menu-tabs {
+    display: flex;
+    background-color: #222;
+}
+
+.menu-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #333;
+    transition: background-color 0.2s;
+    border-bottom: 3px solid transparent;
+    user-select: none;
+}
+
+.menu-tab.active {
+    background-color: #222;
+    border-bottom: 3px solid #c00;
+    color: #fff;
+}
+
+.menu-tab:hover {
+    background-color: #444;
+}
+
+.tab-content {
+    padding: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ddd;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 10px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #eee;
+    font-size: 14px;
+}
+
+.color-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-input {
+    width: 60px !important;
+    height: 40px;
+    padding: 0 !important;
+    cursor: pointer;
+}
+
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #777;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.range-value {
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: #aaa;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    width: auto;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(to bottom, #c00, #900);
+    color: white;
+    flex: 1;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to bottom, #d00, #a00);
+}
+
+.btn-secondary {
+    background-color: #444;
+    color: #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #555;
+}
+
+.btn-danger {
+    background: linear-gradient(to bottom, #900, #600);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(to bottom, #a00, #700);
+}
+
+/* Lista de elementos creados */
+.elements-list {
+    max-height: 40vh;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.element-item {
+    background-color: #2a2a2a;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-left: 4px solid #c00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.element-item:hover {
+    background-color: #333;
+}
+
+.element-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.element-type {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+.element-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #ddd;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 5px;
+    border-radius: 3px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.action-btn:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.edit-btn:hover {
+    color: #5af;
+}
+
+.delete-btn:hover {
+    color: #f55;
+}
+
+.move-btn:hover {
+    color: #5f5;
+}
+
+.no-elements {
+    text-align: center;
+    padding: 30px 20px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.no-elements i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Elementos en pantalla (textdraws) */
+.textdraw-element {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    z-index: 10;
+    touch-action: none;
+}
+
+.textdraw-element.selected {
+    outline: 2px dashed #ff5555;
+}
+
+.textdraw-text {
+    color: white;
+    font-family: Arial, sans-serif;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    white-space: nowrap;
+    padding: 2px 5px;
+    pointer-events: none;
+}
+
+/* Menú de edición */
+.edit-panel {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    width: 300px;
+    max-width: 90vw;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #c00;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    z-index: 99;
+    padding: 15px;
+    display: none;
+}
+
+.edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.edit-title {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.close-edit {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.close-edit:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.edit-info {
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #aaa;
+    text-align: center;
+}
+
+.edit-info i {
+    margin-right: 5px;
+}
+
+/* Área de trabajo */
+.workspace {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #222;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c00;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d00;
+}
+
+/* Optimizaciones de rendimiento */
+.textdraw-element {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.game-view {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Media queries para móviles */
+@media (max-width: 768px) {
+    .menu-container, .edit-panel {
+        width: 95%;
+        right: 2.5%;
+        left: 2.5%;
+        top: 80px;
+    }
+    
+    .floating-button {
+        right: 10px;
+        top: 10px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .floating-button i {
+        font-size: 1.5rem;
+    }
+    
+    .menu-header {
+        padding: 12px;
+        font-size: 1rem;
+    }
+    
+    .menu-tab {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .tab-content {
+        padding: 12px;
+        max-height: 50vh;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}

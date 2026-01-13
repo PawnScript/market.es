@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Editor de TextDraw - SA-MP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Pantalla de inicio -->
+    <div class="start-screen" id="startScreen">
+        <button class="start-button" id="startButton">
+            <i class="fas fa-play"></i> INICIAR EDITOR
+        </button>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="main-container" id="mainContainer">
+        <!-- Vista del juego -->
+        <div class="game-view" id="gameView"></div>
+        
+        <!-- Área de trabajo para textdraws -->
+        <div class="workspace" id="workspace"></div>
+        
+        <!-- Botón flotante -->
+        <div class="floating-button" id="floatingButton">
+            <i class="fas fa-plus"></i>
+        </div>
+        
+        <!-- Menú desplegable -->
+        <div class="menu-container" id="menuContainer">
+            <div class="menu-header">
+                <i class="fas fa-tools"></i> EDITOR DE TEXTDRAW
+            </div>
+            <div class="menu-tabs">
+                <div class="menu-tab active" data-tab="create">Crear</div>
+                <div class="menu-tab" data-tab="created">Creados</div>
+                <div class="menu-tab" data-tab="settings">Opciones</div>
+            </div>
+            
+            <div class="tab-content">
+                <!-- Panel Crear -->
+                <div class="tab-panel active" id="create-panel">
+                    <div class="form-group">
+                        <label for="textType">Tipo de elemento:</label>
+                        <select id="textType" class="form-control">
+                            <option value="text">Texto</option>
+                            <option value="box">Caja (Box)</option>
+                            <option value="preview-model">Vista previa de modelo</option>
+                            <option value="sprite">Sprite</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="textContentGroup">
+                        <label for="textContent">Texto:</label>
+                        <input type="text" id="textContent" class="form-control" placeholder="Escribe tu texto aquí">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="textColor">Color del texto:</label>
+                        <div class="color-input-group">
+                            <input type="color" id="textColor" class="form-control color-input" value="#ffffff">
+                            <div class="color-preview" id="textColorPreview" style="background-color: #ffffff;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shadowSize">Tamaño de sombra:</label>
+                        <select id="shadowSize" class="form-control">
+                            <option value="0">Sin sombra</option>
+                            <option value="1" selected>Pequeña</option>
+                            <option value="2">Mediana</option>
+                            <option value="3">Grande</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="outlineSize">Tamaño de borde:</label>
+                        <select id="outlineSize" class="form-control">
+                            <option value="0">Sin borde</option>
+                            <option value="1" selected>Delgado</option>
+                            <option value="2">Mediano</option>
+                            <option value="3">Grueso</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fontStyle">Estilo de fuente:</label>
+                        <select id="fontStyle" class="form-control">
+                            <option value="0">Normal (0)</option>
+                            <option value="1">Delgado (1)</option>
+                            <option value="2">Sombreado (2)</option>
+                            <option value="3">Sprite (3)</option>
+                            <option value="4">Modelo (4)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="textAlignment">Alineación:</label>
+                        <select id="textAlignment" class="form-control">
+                            <option value="left">Izquierda</option>
+                            <option value="center" selected>Centro</option>
+                            <option value="right">Derecha</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="textSizeX">Ancho del texto:</label>
+                        <input type="range" id="textSizeX" class="form-control" min="0" max="1" step="0.01" value="1">
+                        <div class="range-value" id="textSizeXValue">1.00</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="textSizeY">Alto del texto:</label>
+                        <input type="range" id="textSizeY" class="form-control" min="0" max="1" step="0.01" value="1">
+                        <div class="range-value" id="textSizeYValue">1.00</div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="createElementBtn">
+                            <i class="fas fa-plus-circle"></i> Crear Elemento
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Panel Creados -->
+                <div class="tab-panel" id="created-panel">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Buscar elementos..." id="searchElements">
+                    </div>
+                    
+                    <div class="elements-list" id="elementsList">
+                        <div class="no-elements" id="noElements">
+                            <i class="fas fa-info-circle"></i> No hay elementos creados todavía.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel Opciones -->
+                <div class="tab-panel" id="settings-panel">
+                    <div class="form-group">
+                        <label>Modo de visualización:</label>
+                        <select id="viewMode" class="form-control">
+                            <option value="game">Vista de juego</option>
+                            <option value="grid">Vista con cuadrícula</option>
+                            <option value="simple">Fondo simple</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showCoordinates" checked>
+                            <span>Mostrar coordenadas al mover</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Opciones de exportación:</label>
+                        <select id="exportFormat" class="form-control">
+                            <option value="pawn">Código Pawn</option>
+                            <option value="json">JSON</option>
+                            <option value="txt">Texto plano</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> Exportar TextDraws
+                        </button>
+                        <button class="btn btn-danger" id="clearAllBtn">
+                            <i class="fas fa-trash"></i> Limpiar Todo
+                        </button>
+                    </div>
+                    
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn btn-primary" id="saveProjectBtn">
+                            <i class="fas fa-save"></i> Guardar Proyecto
+                        </button>
+                        <button class="btn btn-secondary" id="loadProjectBtn">
+                            <i class="fas fa-folder-open"></i> Cargar Proyecto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de edición -->
+        <div class="edit-panel" id="editPanel">
+            <div class="edit-header">
+                <div class="edit-title">Editando TextDraw</div>
+                <button class="close-edit" id="closeEditBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label for="editTextContent">Texto:</label>
+                <input type="text" id="editTextContent" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="editTextColor">Color:</label>
+                <div class="color-input-group">
+                    <input type="color" id="editTextColor" class="form-control color-input" value="#ffffff">
+                    <div class="color-preview" id="editTextColorPreview"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="editShadowSize">Sombra:</label>
+                <select id="editShadowSize" class="form-control">
+                    <option value="0">Sin sombra</option>
+                    <option value="1">Pequeña</option>
+                    <option value="2">Mediana</option>
+                    <option value="3">Grande</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" id="saveEditBtn">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <button class="btn btn-danger" id="deleteEditBtn">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+            
+            <div class="edit-info">
+                <i class="fas fa-info-circle"></i> Usa el mouse para arrastrar y cambiar la posición.
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
